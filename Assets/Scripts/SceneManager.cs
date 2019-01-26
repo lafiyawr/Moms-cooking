@@ -57,7 +57,7 @@ public class SceneManager : MonoBehaviour
 
     private class TitleState : NeutralState
     {
-         public override void OnEnter()
+        public override void OnEnter()
         {
             base.OnEnter();
             Debug.Log("Title state!");

@@ -21,7 +21,7 @@ public class EnemyManager : MonoBehaviour
     {
     }
 
-    public void EmitWave(float time)
+    public void EmitWave()
     {
         _spawnTime -= Time.deltaTime;
         if (_spawnTime <= 0)

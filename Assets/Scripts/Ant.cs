@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ant : MonoBehaviour
+public class Ant : Enemy
 {
+    
     // Start is called before the first frame update
     void Start()
     {

@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]private float _speed;
 
-    [SerializeField]private float _health;
+    [SerializeField]private int _health;
 
     private SpriteRenderer _spriteRenderer;
     private AudioSource _audioSource;
@@ -49,4 +49,26 @@ public class Enemy : MonoBehaviour
     {
         return _cam.ScreenToWorldPoint(new Vector3(-50, Random.Range(0, Screen.height-10), _cam.nearClipPlane));
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.GetComponent<weaponManager>() != null){
+            if (!_audioSource.isPlaying)
+            {
+                _audioSource.Play();            
+            }
+
+            if (_health >= 1)
+            {
+                _health -= 1;            
+            }
+
+            if (_health < 1)
+            {
+                Destroy(gameObject);
+                //kill me            
+            }
+        }
+    }
+    
 }
