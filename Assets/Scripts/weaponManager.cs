@@ -19,6 +19,7 @@ public class weaponManager : MonoBehaviour
     // Update is called once per frame
     private void OnCollisionEnter2D()
     {
+        Debug.Log("hit!");
         Destroy(gameObject);  
     }
 }
