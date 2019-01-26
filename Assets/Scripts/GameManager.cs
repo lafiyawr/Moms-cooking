@@ -6,8 +6,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private GameObject _playerGameObject;
-    private Player _player;
+    private GameObject _player;
+
+    public GameObject Player
+    {
+        get { return _player; }
+        set { _player = value; }
+    }
+
     private GameObject _titleScene;
     private GameObject _gameScene;
     private GameObject _endScene;
@@ -22,17 +28,17 @@ public class GameManager : MonoBehaviour
     }
 
     private FSM<GameManager> _sceneFsm;
-    
        
     void Awake(){
 //        Services.Prefabs = Resources.Load<PrefabDB>("Prefabs/PrefabDB");
         Services.GameManager = this;
         Services.PrefabDatabase = Resources.Load<PrefabDatabase>("Prefabs/PrefabDatabase");
+        Services.SceneManager = FindObjectOfType<SceneManager>();
     }
 
     void Start()
     {
-        _playerGameObject = CreateGameObject(Services.PrefabDatabase.Actors[0]);
+//        _playerGameObject = CreateGameObject(Services.PrefabDatabase.Actors[0]);
 //        _gameScene.SetActive(true);
 //        _endScene.SetActive(false);
     }

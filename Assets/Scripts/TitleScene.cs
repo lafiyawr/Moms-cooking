@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class TitleScene : MonoBehaviour
 {
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +15,4 @@ public class EnemyManager : MonoBehaviour
     {
         
     }
-    
-    
 }

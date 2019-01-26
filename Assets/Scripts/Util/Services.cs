@@ -6,4 +6,5 @@ public class Services
 {
     public static PrefabDatabase PrefabDatabase { get; set; }
     public static GameManager GameManager { get; set; }
+    public static SceneManager SceneManager { get; set; }
 }
