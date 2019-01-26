@@ -12,17 +12,14 @@ public class Scene : MonoBehaviour
     [SerializeField] private Text[] _bodyText;
     public Text[] BodyText => _bodyText;
     
-
-    // Start is called before the first frame update
+    [SerializeField]private SpriteRenderer _background;
+    
     void Start()
     {
-        if (_headers.Length > 0)
-            Debug.Log(_headers[0].text);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
     }
 }
