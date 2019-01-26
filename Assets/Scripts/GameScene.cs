@@ -7,16 +7,13 @@ public class GameScene : Scene
 //    private GameObject 
     // Start is called before the first frame update
     private GameObject _threshold;
+    private GameObject _enemy;
 
     void Start()
     {
         Services.GameManager.Player = Services.GameManager.CreateGameObject(Services.PrefabDatabase.Actors[0]);
-        Services.GameManager.Player.transform.position = Vector3.right;
+        Services.EnemyManager = FindObjectOfType<EnemyManager>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
