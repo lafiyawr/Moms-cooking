@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actors:
   - {fileID: 3863200727554063658, guid: 15f1a3db900358f43a57ee1abebcf938, type: 3}
-  - {fileID: 96788083463603899, guid: 4d69f3ebbb3284a30b9e43cfbbaad157, type: 3}
+  - {fileID: 3248799643393445455, guid: 6ee341b2ae5e58f48bdaaaa81bb8a7e0, type: 3}
+  - {fileID: 4570615175222629689, guid: 47757997a186b424eaed44525565dfe3, type: 3}
+  - {fileID: 5899722456631103624, guid: 9d752515959231349b26f41195341bba, type: 3}
   _ui: []
   _scenes:
   - {fileID: 3235243383892601668, guid: b20a11b9a35b949079b83cc76e7f5f9d, type: 3}

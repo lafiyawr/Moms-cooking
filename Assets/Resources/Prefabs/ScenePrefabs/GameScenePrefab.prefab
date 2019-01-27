@@ -309,7 +309,7 @@ MonoBehaviour:
   _headers: []
   _bodyText: []
   _background: {fileID: 0}
-  _roundTimeInSeconds: 60
+  _roundTimeInSeconds: 10
 --- !u!1 &4223419380765921369
 GameObject:
   m_ObjectHideFlags: 0
