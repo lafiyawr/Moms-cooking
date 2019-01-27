@@ -33,13 +33,14 @@ public class CutScene : MonoBehaviour
                 {
                     DoSimpleTalkTween(_whoTalksList[_numWhoIsTalkingNow]);
                     UpdateSpeechBubble(_whoTalksList[_numWhoIsTalkingNow].GetComponentInChildren<TextMeshPro>());
-                    ++_numWhoIsTalkingNow;
+                    _numWhoIsTalkingNow++;
                 }
             }
         }
         else
         {
-            _isCutSceneComplete = true;
+            if(Input.GetKeyDown(KeyCode.Return))
+                _isCutSceneComplete = true;
         }
     }
 
@@ -47,16 +48,15 @@ public class CutScene : MonoBehaviour
     {
         _isTweening = true;
         Sequence a = DOTween.Sequence();
-        a.Append(actor.transform.DOMove(Vector3.up, 0.25f)).SetEase(Ease.InBounce);
-        a.Append(actor.transform.DOMove(Vector3.down, 0.1f)).SetEase(Ease.InCirc);
-        Sequence b = DOTween.Sequence();
-        b.Append(actor.transform.DORotate(new Vector3(30, actor.transform.eulerAngles.y, 0), 0.35f));
-        b.OnComplete(() => _isTweening = false);
+        a.Append(actor.transform.DOMove(new Vector3(Random.Range(-10, 10), Random.Range(-5,5)), 0.25f)).SetEase(Ease.InBounce);
+        a.Append(actor.transform.DOLocalMove(Vector3.down, 0.1f)).SetEase(Ease.InCirc);
+        a.OnComplete(() => _isTweening = false);
     }
 
     public void UpdateSpeechBubble(TextMeshPro textMeshPro)
     {
         textMeshPro.text = _dialogueList[_numWhoIsTalkingNow];
+//        Debug.Log(textMeshPro.text);
     }
 
 

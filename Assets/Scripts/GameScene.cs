@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Timers;
 using UnityEngine;
 using UnityEngine.XR.WSA;
@@ -12,22 +13,28 @@ public class GameScene : Scene
 //    private GameObject 
     // Start is called before the first frame update
     private FSM<GameScene> _gameStates;
-    private GameObject _threshold;
+    [SerializeField]private Threshold _threshold;
     private GameObject _player;
     private Camera _cam;
+    [SerializeField] private GameObject _winMsg;
+    [SerializeField] private GameObject _loseMsg;
     [SerializeField] private List<CutScene> _cutScenes;
     private float _roundTimeInSeconds;
     private int _currentRound = 1;
     public int CurrentRound => _currentRound;
-    private const float ROUND_TIME = 10;
-    
+    private const float ROUND_TIME = 1;
+    private bool _isPlayerVictorious;
+    private bool _isPlayerDead;
+    public bool IsPlayerVictorious => _isPlayerVictorious;
+
 
     void Start()
     {
         _gameStates = new FSM<GameScene>(this);
-        _gameStates.TransitionTo<RoundStartState>();
+        _gameStates.TransitionTo<CutsceneState>();
         _cam = Camera.main;
         _player = Services.GameManager.CreateGameObject(Services.PrefabDatabase.Actors[0]);
+        Services.GameManager.Player = _player;
         _player.transform.position = _cam.ScreenToWorldPoint(new Vector3(_cam.pixelWidth * 0.90f, Random.Range(0, Screen.height-10), _cam.nearClipPlane));
         Services.EnemyManager = FindObjectOfType<EnemyManager>();
     }
@@ -82,6 +89,8 @@ public class GameScene : Scene
         {
             base.OnEnter();
             Context._background.SetActive(true);
+            Context._player.SetActive(true);
+            Context._threshold.gameObject.SetActive(true);
             Context._roundTimeInSeconds = ROUND_TIME;
             Debug.Log("You are in round " + Context._currentRound);
         }
@@ -91,11 +100,11 @@ public class GameScene : Scene
             base.Update();
             _timeLeftInRound = Context.CountdownRoundTime();
             Services.EnemyManager.EmitWave(Context._currentRound);
-            if (Context._currentRound < 5)
+            if (Context._currentRound < Context._cutScenes.Count)
             {
                 if (_timeLeftInRound <= 0)
                 {
-                    TransitionTo<GetReadyForNextRoundState>();
+                    TransitionTo<CutsceneState>();
                 } 
             }
             else
@@ -106,58 +115,46 @@ public class GameScene : Scene
                 } 
             }
 
+            if (Context._threshold.HitReceived)
+            {
+                TransitionTo<LoseState>();
+            }
         }
 
         public override void OnExit()
         {
             base.OnExit();
-            Debug.Log("Kill all animals!");
+            Context._threshold.gameObject.SetActive(false);
             Services.EnemyManager.ClearWave();
+            if(Context._currentRound<Context._cutScenes.Count)
+                Context._currentRound++;
 //            Services.EnemyManager.
         }
     }
  
-    private class GetReadyForNextRoundState : FSM<GameScene>.State
+    private class CutsceneState : FSM<GameScene>.State
     {
         public override void OnEnter()
         {
             base.OnEnter();
-            Debug.Log("GET READY FOR NEXT ROUND STATE!");
-            Context._currentRound++;
-            if (Context._currentRound == 1)
-            {
-                Debug.LogError("WRONG STATE FRIEND!");
-            }
-            if (Context._currentRound == 2)
-            {
-                //play RAT cutscene
-                Context._background.SetActive(false);
-                Context._cutScenes[Context._currentRound-1].gameObject.SetActive(true);
-                Debug.Log("Playing RAT cutscene");
-
-            } else if (Context._currentRound == 3)
-            {
-                //play cockroach cutscene
-                Debug.Log("Playing COCKROACH cutscene");
-            } else if (Context._currentRound == 4)
-            {
-                //play apocalypse cutscene
-                Debug.Log("Playing APOCALYPSE cutscene");
-            }
+            Debug.Log("cutscene state");
+//            Services.GameManager.Player.SetActive(false);
+            Context._player.SetActive(false);
+            Context._background.SetActive(false);
+            Context._cutScenes[Context._currentRound-1].gameObject.SetActive(true);
         }
 
         public override void Update()
         {
             base.Update();
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
+            if (Context._cutScenes[Context._currentRound - 1].IsCutSceneComplete)
                 TransitionTo<RoundState>();
-            }
         }
 
         public override void OnExit()
         {
-            base.OnExit();   
+            base.OnExit();
+            Context._cutScenes[Context._currentRound - 1].gameObject.SetActive(false);
         }
     }
     
@@ -167,16 +164,20 @@ public class GameScene : Scene
         {
             base.OnEnter();
             //play some cutscene here; then OnComplete=>TransitionTo<RoundState>
+            Context._loseMsg.SetActive(true);
         }
 
         public override void Update()
         {
             base.Update();
+            if (Input.GetKeyDown(KeyCode.Return))
+                TransitionTo<RoundState>();
         }
 
         public override void OnExit()
         {
             base.OnExit();
+            Context._loseMsg.SetActive(false);
         }
     }
     
@@ -185,15 +186,18 @@ public class GameScene : Scene
         public override void OnEnter()
         {
             base.OnEnter();
-            
+            Debug.Log("We are in win stateEEEEEEEE!");
+            Context._winMsg.SetActive(true);
+            Context._background.SetActive(false);
         }
 
         public override void Update()
         {
             base.Update();
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            if (Input.GetKeyDown(KeyCode.Return))
             {
-                Debug.Log("RESTART!");
+                Context._isPlayerVictorious = true;
+                Context._player.SetActive(false);
             }
         }
 
@@ -201,5 +205,9 @@ public class GameScene : Scene
         {
             base.OnExit();
         }
+    }
+
+    private class TestState : EmptyGameState
+    {
     }
 }
