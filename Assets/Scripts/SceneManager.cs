@@ -11,6 +11,9 @@ public class SceneManager : MonoBehaviour
 
     [SerializeField]private List<GameObject> _scenes = new List<GameObject>();
 
+    private GameObject _titleScene;
+    private GameObject _gameScene;
+    private GameObject _endScene;
     private GameObject _currentScene;
     // Start is called before the first frame update
     void Start()
@@ -82,21 +85,22 @@ public class SceneManager : MonoBehaviour
 
     private class GameplayState : NeutralState
     {
+        private GameScene _gameScene;
         public override void OnEnter()
         {
             base.OnEnter();
             Context._currentScene = Context._scenes[1];
+            _gameScene = Context._currentScene.GetComponent<GameScene>();
             Context.SetOnlyCurrentSceneActive(Context._scenes);
             Debug.Log("Gameplay State!");
-      
         }
 
         public override void Update()
         {
             base.Update();
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (_gameScene.CurrentRound == 4)
             {
-                TransitionTo<EndState>();
+                
             }
         }
 
