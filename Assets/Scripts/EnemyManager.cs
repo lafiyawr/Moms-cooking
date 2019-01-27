@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
@@ -72,6 +73,16 @@ public class EnemyManager : MonoBehaviour
             }
         }
 
+    }
+
+    public void ClearWave()
+    {
+        foreach (var enemy in _wave)
+        {
+            enemy.gameObject.SetActive(false);
+        }
+        _wave.Clear();
+        Debug.Log("Wave count: " + _wave.Count);
     }
 
 }

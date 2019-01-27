@@ -12,7 +12,7 @@ public class Scene : MonoBehaviour
     [SerializeField] private Text[] _bodyText;
     public Text[] BodyText => _bodyText;
     
-    [SerializeField]private SpriteRenderer _background;
+    [SerializeField]protected GameObject _background;
     
     void Start()
     {

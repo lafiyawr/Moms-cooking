@@ -1,25 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Timers;
 using UnityEngine;
 using UnityEngine.XR.WSA;
 using DG.Tweening;
+using Vector3 = UnityEngine.Vector3;
 
 public class GameScene : Scene
 {
 //    private GameObject 
     // Start is called before the first frame update
+    private FSM<GameScene> _gameStates;
     private GameObject _threshold;
-    [SerializeField]public float _roundTimeInSeconds;
     private GameObject _player;
     private Camera _cam;
+    [SerializeField] private List<CutScene> _cutScenes;
+    private float _roundTimeInSeconds;
     private int _currentRound = 1;
-
     public int CurrentRound => _currentRound;
-
     private const float ROUND_TIME = 10;
-
-    private FSM<GameScene> _gameStates;
+    
 
     void Start()
     {
@@ -52,7 +53,8 @@ public class GameScene : Scene
         public override void OnEnter()
         {
             base.OnEnter();
-            Debug.Log("Playing ROUNDSTART cutscene!");
+            Context._background.SetActive(false);
+            Context._cutScenes[0].gameObject.SetActive(true);
             //play cutscene sequence.
             //oncomplete, TransitionTo<RoundState>
         }
@@ -60,7 +62,7 @@ public class GameScene : Scene
         public override void Update()
         {
             base.Update();
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            if (Context._cutScenes[0].IsCutSceneComplete)
             {
                 TransitionTo<RoundState>();
             }
@@ -69,6 +71,7 @@ public class GameScene : Scene
         public override void OnExit()
         {
             base.OnExit();
+            Context._cutScenes[0].gameObject.SetActive(false);
         }
     }
     
@@ -78,6 +81,7 @@ public class GameScene : Scene
         public override void OnEnter()
         {
             base.OnEnter();
+            Context._background.SetActive(true);
             Context._roundTimeInSeconds = ROUND_TIME;
             Debug.Log("You are in round " + Context._currentRound);
         }
@@ -108,6 +112,8 @@ public class GameScene : Scene
         {
             base.OnExit();
             Debug.Log("Kill all animals!");
+            Services.EnemyManager.ClearWave();
+//            Services.EnemyManager.
         }
     }
  
@@ -125,6 +131,8 @@ public class GameScene : Scene
             if (Context._currentRound == 2)
             {
                 //play RAT cutscene
+                Context._background.SetActive(false);
+                Context._cutScenes[Context._currentRound-1].gameObject.SetActive(true);
                 Debug.Log("Playing RAT cutscene");
 
             } else if (Context._currentRound == 3)
@@ -149,8 +157,7 @@ public class GameScene : Scene
 
         public override void OnExit()
         {
-            base.OnExit();
-
+            base.OnExit();   
         }
     }
     
