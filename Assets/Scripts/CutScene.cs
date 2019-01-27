@@ -10,46 +10,80 @@ public class CutScene : MonoBehaviour
 
     public bool IsCutSceneComplete => _isCutSceneComplete;
 
+    [SerializeField]private GameObject _narrationScreen; 
     [SerializeField] private List<GameObject> _whoTalksList;
     [SerializeField] private List<string> _dialogueList;
 
     private bool _isTweening;
     private int _numWhoIsTalkingNow;
-    
+
+    enum CutSceneSection
+    {
+        Narration,
+        Dialogue
+    }
+
+    private CutSceneSection _cutSceneSection;
+
     // Start is called before the first frame update
     void Start()
     {
         _numWhoIsTalkingNow = 0;
+        if (_narrationScreen != null)
+        {
+            _cutSceneSection = CutSceneSection.Narration;        
+        }
+        else
+        {
+            _cutSceneSection = CutSceneSection.Narration;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_numWhoIsTalkingNow < _whoTalksList.Count)
+        switch (_cutSceneSection)
         {
-            if (_whoTalksList.Count > 0 && !_isTweening && _whoTalksList.Count == _dialogueList.Count)
-            {
+            case CutSceneSection.Narration:
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    DoSimpleTalkTween(_whoTalksList[_numWhoIsTalkingNow]);
-                    UpdateSpeechBubble(_whoTalksList[_numWhoIsTalkingNow].GetComponentInChildren<TextMeshPro>());
-                    _numWhoIsTalkingNow++;
+                    _narrationScreen.SetActive(false);
+                    _cutSceneSection = CutSceneSection.Dialogue;
+                } 
+                break;
+            case CutSceneSection.Dialogue:
+                if (_numWhoIsTalkingNow < _whoTalksList.Count)
+                {
+                    if (_whoTalksList.Count > 0 && !_isTweening && _whoTalksList.Count == _dialogueList.Count)
+                    {
+                        if (Input.GetKeyDown(KeyCode.Return))
+                        {
+                            DoSimpleTalkTween(_whoTalksList[_numWhoIsTalkingNow]);
+                            UpdateSpeechBubble(_whoTalksList[_numWhoIsTalkingNow].GetComponentInChildren<TextMeshPro>());
+                            ++_numWhoIsTalkingNow;  
+                        }
+                    }
                 }
-            }
+                else
+                {
+                    if(Input.GetKeyDown(KeyCode.Return))
+                        _isCutSceneComplete = true;
+                }
+                break;
+            default:
+                break;
         }
-        else
-        {
-            if(Input.GetKeyDown(KeyCode.Return))
-                _isCutSceneComplete = true;
-        }
+
+    
     }
 
     public void DoSimpleTalkTween(GameObject actor)
     {
         _isTweening = true;
+        actor.transform.GetChild(0).gameObject.SetActive(true);
         Sequence a = DOTween.Sequence();
-        a.Append(actor.transform.DOMove(new Vector3(Random.Range(-10, 10), Random.Range(-5,5)), 0.25f)).SetEase(Ease.InBounce);
-        a.Append(actor.transform.DOLocalMove(Vector3.down, 0.1f)).SetEase(Ease.InCirc);
+        a.Append(actor.transform.DOMoveY(1f, 0.25f));
+        a.Append(actor.transform.DOMoveY(-1f, 0.1f));
         a.OnComplete(() => _isTweening = false);
     }
 

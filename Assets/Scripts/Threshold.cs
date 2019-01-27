@@ -15,6 +15,7 @@ public class Threshold : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        EventManager.Instance.Register<CritterCollisionEvent>(SetHitReceivedTrue);
         _rb = GetComponent<Rigidbody2D>();
         _rb.isKinematic = true;
     }
@@ -25,6 +26,12 @@ public class Threshold : MonoBehaviour
         
     }
 
+    public void SetHitReceivedTrue(GameEvent e)
+    {
+        CritterCollisionEvent _e = e as CritterCollisionEvent;
+        _hitReceived = true;
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.GetComponent<Enemy>() != null)
@@ -32,4 +39,15 @@ public class Threshold : MonoBehaviour
             _hitReceived = true;
         }
     }
+
+    private void OnDestroy()
+    {
+        EventManager.Instance.Unregister<CritterCollisionEvent>(SetHitReceivedTrue);
+    }
+
+}
+
+public class CritterCollisionEvent : GameEvent
+{
+    
 }

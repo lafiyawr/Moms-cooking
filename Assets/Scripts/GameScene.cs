@@ -14,6 +14,9 @@ public class GameScene : Scene
     // Start is called before the first frame update
     private FSM<GameScene> _gameStates;
     [SerializeField]private Threshold _threshold;
+
+    public Threshold Threshold => _threshold;
+
     private GameObject _player;
     private Camera _cam;
     [SerializeField] private GameObject _winMsg;
@@ -22,7 +25,7 @@ public class GameScene : Scene
     private float _roundTimeInSeconds;
     private int _currentRound = 1;
     public int CurrentRound => _currentRound;
-    private const float ROUND_TIME = 1;
+    private const float ROUND_TIME = 60;
     private bool _isPlayerVictorious;
     private bool _isPlayerDead;
     public bool IsPlayerVictorious => _isPlayerVictorious;
@@ -35,7 +38,7 @@ public class GameScene : Scene
         _cam = Camera.main;
         _player = Services.GameManager.CreateGameObject(Services.PrefabDatabase.Actors[0]);
         Services.GameManager.Player = _player;
-        _player.transform.position = _cam.ScreenToWorldPoint(new Vector3(_cam.pixelWidth * 0.90f, Random.Range(0, Screen.height-10), _cam.nearClipPlane));
+        _player.transform.position = _cam.ScreenToWorldPoint(new Vector3(_cam.pixelWidth * 0.90f, Random.Range(0, Screen.height-10), _cam.nearClipPlane+9));
         Services.EnemyManager = FindObjectOfType<EnemyManager>();
     }
 
@@ -91,6 +94,7 @@ public class GameScene : Scene
             Context._background.SetActive(true);
             Context._player.SetActive(true);
             Context._threshold.gameObject.SetActive(true);
+            Context._threshold.HitReceived = false;
             Context._roundTimeInSeconds = ROUND_TIME;
             Debug.Log("You are in round " + Context._currentRound);
         }
@@ -126,8 +130,7 @@ public class GameScene : Scene
             base.OnExit();
             Context._threshold.gameObject.SetActive(false);
             Services.EnemyManager.ClearWave();
-            if(Context._currentRound<Context._cutScenes.Count)
-                Context._currentRound++;
+
 //            Services.EnemyManager.
         }
     }
@@ -139,6 +142,10 @@ public class GameScene : Scene
             base.OnEnter();
             Debug.Log("cutscene state");
 //            Services.GameManager.Player.SetActive(false);
+            if (Context._currentRound != 1)
+            {
+                Context._currentRound++;                                
+            }
             Context._player.SetActive(false);
             Context._background.SetActive(false);
             Context._cutScenes[Context._currentRound-1].gameObject.SetActive(true);
@@ -165,13 +172,18 @@ public class GameScene : Scene
             base.OnEnter();
             //play some cutscene here; then OnComplete=>TransitionTo<RoundState>
             Context._loseMsg.SetActive(true);
+            Context._background.SetActive(false);
         }
 
         public override void Update()
         {
             base.Update();
             if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Services.EnemyManager.ClearWave();
                 TransitionTo<RoundState>();
+            }
+
         }
 
         public override void OnExit()

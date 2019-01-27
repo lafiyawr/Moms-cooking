@@ -16,6 +16,11 @@ public class GgjSceneManager : MonoBehaviour
     private GameObject _titleScene;
     private GameObject _gameScene;
     private GameObject _endScene;
+
+    public GameObject GameScene => _gameScene;
+    public GameObject TitleScene => _titleScene;
+    public GameObject EndScene => _endScene;
+
     private GameObject _currentScene;
     // Start is called before the first frame update
     void Start()
@@ -28,6 +33,10 @@ public class GgjSceneManager : MonoBehaviour
             GameObject g = Services.GameManager.CreateGameObject(Services.PrefabDatabase.Scenes[i]);
             _scenes.Add(g);
         }
+
+        _titleScene = _scenes[0];
+        _gameScene = _scenes[1];
+        _endScene = _scenes[2];
     }
 
     // Update is called once per frame 

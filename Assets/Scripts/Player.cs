@@ -9,10 +9,12 @@ public class Player : MonoBehaviour
 
     public GameObject weapon;
     public Transform weaponTransform;
+    public int playerHealth;
+   
     // Start is called before the first frame update
     void Start()
     {
-      
+        
     }
 
     // Update is called once per frame
@@ -32,6 +34,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            
             Instantiate(weapon, weaponTransform.position, weaponTransform.rotation);
 
         }
