@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 //        Services.Prefabs = Resources.Load<PrefabDB>("Prefabs/PrefabDB");
         Services.GameManager = this;
         Services.PrefabDatabase = Resources.Load<PrefabDatabase>("Prefabs/PrefabDatabase");
-        Services.SceneManager = FindObjectOfType<SceneManager>();
+        Services.GgjSceneManager = FindObjectOfType<GgjSceneManager>();
     }
 
     void Start()

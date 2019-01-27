@@ -25,17 +25,17 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     protected void Start()
     {
-        Debug.Log("Hi i'm enemy " + MyId);
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _audioSource = GetComponent<AudioSource>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _boxCollider2D = GetComponent<BoxCollider2D>();
+        _rigidbody2D.isKinematic = true;
         _cam = Camera.main;
-        transform.position = RandomSpawnLocation();
+        transform.position = GetRandomSpawnLocation();
     }
 
     // Update is called once per frame
-    protected virtual void Update()
+    protected void Update()
     {
         Move(_speed);
     }
@@ -45,14 +45,15 @@ public class Enemy : MonoBehaviour
         transform.Translate(Vector3.right * _speed * Time.deltaTime);
     }
 
-    private Vector3 RandomSpawnLocation()
+    private Vector3 GetRandomSpawnLocation()
     {
         return _cam.ScreenToWorldPoint(new Vector3(-50, Random.Range(0, Screen.height-10), _cam.nearClipPlane));
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.GetComponent<weaponManager>() != null){
+            Debug.Log("collided with " + gameObject);
             if (!_audioSource.isPlaying)
             {
                 _audioSource.Play();            
@@ -65,8 +66,7 @@ public class Enemy : MonoBehaviour
 
             if (_health < 1)
             {
-                Destroy(gameObject);
-                //kill me            
+                gameObject.SetActive(false);
             }
         }
     }

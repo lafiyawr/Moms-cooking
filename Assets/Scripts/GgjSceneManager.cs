@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using DG.Tweening;
 using ProBuilder2.Common;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class SceneManager : MonoBehaviour
+public class GgjSceneManager : MonoBehaviour
 {
-    private FSM<SceneManager> _fsm;
+    private FSM<GgjSceneManager> _fsm;
 
     [SerializeField]private List<GameObject> _scenes = new List<GameObject>();
 
@@ -19,7 +21,7 @@ public class SceneManager : MonoBehaviour
     void Start()
     {
         
-        _fsm = new FSM<SceneManager>(this);
+        _fsm = new FSM<GgjSceneManager>(this);
         _fsm.TransitionTo<TitleState>();
         for (int i = 0; i < Services.PrefabDatabase.Scenes.Length; i++)
         {
@@ -53,7 +55,7 @@ public class SceneManager : MonoBehaviour
         }
     }
 
-    private class NeutralState : FSM<SceneManager>.State
+    private class NeutralState : FSM<GgjSceneManager>.State
     {
         
     }
@@ -98,10 +100,10 @@ public class SceneManager : MonoBehaviour
         public override void Update()
         {
             base.Update();
-            if (_gameScene.CurrentRound == 4)
-            {
-                
-            }
+            if (Input.GetKeyDown(KeyCode.R))
+                SceneManager.LoadScene("SampleScene");
+            if (_gameScene.IsPlayerVictorious)
+                TransitionTo<EndState>();
         }
 
         public override void OnExit()
@@ -118,7 +120,6 @@ public class SceneManager : MonoBehaviour
             Context._currentScene = Context._scenes[2];
             Context.SetOnlyCurrentSceneActive(Context._scenes);
             Debug.Log("End State!");
-         
         }
 
         public override void Update()
@@ -126,7 +127,7 @@ public class SceneManager : MonoBehaviour
             base.Update();
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                TransitionTo<TitleState>();
+                SceneManager.LoadScene("SampleScene");
             }
         }
 
