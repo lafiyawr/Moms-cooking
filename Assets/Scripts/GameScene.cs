@@ -107,6 +107,7 @@ public class GameScene : Scene
         public override void OnExit()
         {
             base.OnExit();
+            Debug.Log("Kill all animals!");
         }
     }
  
