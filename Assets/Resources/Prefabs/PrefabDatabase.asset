@@ -15,6 +15,8 @@ MonoBehaviour:
   _actors:
   - {fileID: 3863200727554063658, guid: 15f1a3db900358f43a57ee1abebcf938, type: 3}
   - {fileID: 96788083463603899, guid: 4d69f3ebbb3284a30b9e43cfbbaad157, type: 3}
+  - {fileID: 96788083463603899, guid: 405ed7ab4a2e5459e8c56b922a3b2851, type: 3}
+  - {fileID: 96788083463603899, guid: 976f53dd2b59347048752e4293ea4f2c, type: 3}
   _ui: []
   _scenes:
   - {fileID: 3235243383892601668, guid: b20a11b9a35b949079b83cc76e7f5f9d, type: 3}

@@ -7,8 +7,12 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]private List<Enemy> _wave;
 
     private const int NUM_ENEMIES_IN_WAVE = 20;
-    private const int MAX_TIME_BEFORE_ENEMY_SPAWN = 5;
-    private const int MIN_TIME_BEFORE_ENEMY_SPAWN = 1;
+    private const int MAX_TIME_BEFORE_ENEMY_SPAWN_RD1 = 5;
+    private const int MIN_TIME_BEFORE_ENEMY_SPAWN_RD1 = 1;
+    private const int MAX_TIME_BEFORE_ENEMY_SPAWN_RD2 = 3;
+    private const int MIN_TIME_BEFORE_ENEMY_SPAWN_RD2 = 1;
+    private const int MAX_TIME_BEFORE_ENEMY_SPAWN_RD3 = 2;
+    private const int MIN_TIME_BEFORE_ENEMY_SPAWN_RD3 = 1;
     private float _spawnTime;
     
     // Start is called before the first frame update
@@ -21,16 +25,53 @@ public class EnemyManager : MonoBehaviour
     {
     }
 
-    public void EmitWave()
+    public void EmitWave(int round)
     {
         _spawnTime -= Time.deltaTime;
-        if (_spawnTime <= 0)
+        if (round == 1)
         {
-            GameObject g = Services.GameManager.CreateGameObject(Services.PrefabDatabase.Actors[1]);
-            _wave.Add(g.GetComponent<Enemy>());
-//            g.transform.position = new Vector3(-10f, Random.Range(-5f, 5f), 0);
-            _spawnTime = Random.Range(MIN_TIME_BEFORE_ENEMY_SPAWN, MAX_TIME_BEFORE_ENEMY_SPAWN);
+            if (_spawnTime <= 0)
+            {
+                GameObject g = Services.GameManager.CreateGameObject(Services.PrefabDatabase.Actors[1]);
+                _wave.Add(g.GetComponent<Enemy>());
+    //            g.transform.position = new Vector3(-10f, Random.Range(-5f, 5f), 0);
+                _spawnTime = Random.Range(MIN_TIME_BEFORE_ENEMY_SPAWN_RD1, MAX_TIME_BEFORE_ENEMY_SPAWN_RD1);
+            }
         }
+
+        if (round == 2)
+        {
+            if (_spawnTime <= 0)
+            {
+                GameObject g = Services.GameManager.CreateGameObject(Services.PrefabDatabase.Actors[2]);
+                _wave.Add(g.GetComponent<Enemy>());
+                //            g.transform.position = new Vector3(-10f, Random.Range(-5f, 5f), 0);
+                _spawnTime = Random.Range(MIN_TIME_BEFORE_ENEMY_SPAWN_RD2, MAX_TIME_BEFORE_ENEMY_SPAWN_RD2);
+            }
+        }
+
+        if (round == 3)
+        {
+            if (_spawnTime <= 0)
+            {
+                GameObject g = Services.GameManager.CreateGameObject(Services.PrefabDatabase.Actors[3]);
+                _wave.Add(g.GetComponent<Enemy>());
+                //            g.transform.position = new Vector3(-10f, Random.Range(-5f, 5f), 0);
+                _spawnTime = Random.Range(MIN_TIME_BEFORE_ENEMY_SPAWN_RD3, MAX_TIME_BEFORE_ENEMY_SPAWN_RD3);
+            }
+        }
+
+        if (round == 4)
+        {
+            if (_spawnTime <= 0)
+            {
+                GameObject g = Services.GameManager.CreateGameObject(Services.PrefabDatabase.Actors[Random.Range(1,3)]);
+                _wave.Add(g.GetComponent<Enemy>());
+                //            g.transform.position = new Vector3(-10f, Random.Range(-5f, 5f), 0);
+                _spawnTime = Random.Range(MIN_TIME_BEFORE_ENEMY_SPAWN_RD3, MAX_TIME_BEFORE_ENEMY_SPAWN_RD3);
+            }
+        }
+
     }
 
 }
