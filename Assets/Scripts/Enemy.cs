@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.U2D;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -21,6 +22,8 @@ public class Enemy : MonoBehaviour
     private BoxCollider2D _boxCollider2D;
 
     private Camera _cam;
+    private bool _hasFiredCollisionEvent = false;
+    
     
     // Start is called before the first frame update
     protected void Start()
@@ -38,6 +41,19 @@ public class Enemy : MonoBehaviour
     protected void Update()
     {
         Move(_speed);
+        CheckForCollisionWithThreshold();
+    }
+
+    private void CheckForCollisionWithThreshold()
+    {
+        if (transform.position.x >= 10 && !_hasFiredCollisionEvent)
+        {
+            EventManager.Instance.Fire(new CritterCollisionEvent());
+            _hasFiredCollisionEvent = true;
+        }
+
+//        GameObject threshold = Services.GgjSceneManager.GameScene.thres
+//        if(Vector3.Distance())
     }
 
     private void Move(float speed)
