@@ -9,6 +9,7 @@ public class weaponManager : MonoBehaviour
     public float weaponDamage;
     public float weaponDeath;
     public Rigidbody2D weaponsRB;
+    public GameObject sparks;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +21,10 @@ public class weaponManager : MonoBehaviour
     private void OnCollisionEnter2D()
     {
         Debug.Log("hit!");
-        Destroy(gameObject);  
+        Destroy(gameObject);
+        Instantiate(sparks, transform.position, Quaternion.identity);
+        Destroy(sparks);
+        
+       
     }
 }
